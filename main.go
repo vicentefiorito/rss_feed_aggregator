@@ -18,7 +18,7 @@ type apiConfig struct {
 
 func main() {
 	godotenv.Load(".env")
-	
+
 	// load the database
 	dbUrl := os.Getenv("DB_CONNECTION")
 	if dbUrl == "" {
@@ -29,7 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatal("Problem connecting to the db!")
 	}
-	
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("Port variable is not set!")
@@ -52,6 +52,7 @@ func main() {
 
 	// user endpoints
 	mux.HandleFunc("POST /v1/users", apiConfig.handleUserCreate)
+	mux.HandleFunc("GET /v1/users", apiConfig.handleGetUser)
 
 	s := &http.Server{
 		Addr:    ":" + port,
