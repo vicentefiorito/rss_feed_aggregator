@@ -42,6 +42,6 @@ func (cfg *apiConfig) handleUserCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Valid response an valid user created
-	jsonResponse(w, http.StatusCreated, dbUserToUser(user))
+	jsonResponse(w, http.StatusCreated, user)
 
 }
