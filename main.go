@@ -17,13 +17,19 @@ type apiConfig struct {
 }
 
 func main() {
+	godotenv.Load(".env")
+	
 	// load the database
 	dbUrl := os.Getenv("DB_CONNECTION")
+	if dbUrl == "" {
+		log.Fatal("DB_CONNECTION variable is not set!")
+	}
+
 	db, err := sql.Open("postgres", dbUrl)
 	if err != nil {
 		log.Fatal("Problem connecting to the db!")
 	}
-	godotenv.Load(".env")
+	
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("Port variable is not set!")
@@ -43,6 +49,9 @@ func main() {
 	// route handling begins here
 	mux.HandleFunc("GET /v1/readiness", handleReadiness)
 	mux.HandleFunc("GET /v1/err", handleErr)
+
+	// user endpoints
+	mux.HandleFunc("POST /v1/users", apiConfig.handleUserCreate)
 
 	s := &http.Server{
 		Addr:    ":" + port,
