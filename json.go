@@ -8,6 +8,8 @@ import (
 
 // this function responds with a valid json response
 func jsonResponse(w http.ResponseWriter, statusCode int, payload interface{}) {
+	// sets the header
+	w.Header().Set("Content-Type", "application/json")
 	// marshalls the response from the json
 	res, err := json.Marshal(payload)
 
