@@ -52,7 +52,9 @@ func main() {
 
 	// user endpoints
 	mux.HandleFunc("POST /v1/users", apiConfig.handleUserCreate)
-	mux.HandleFunc("GET /v1/users", apiConfig.handleGetUser)
+	mux.HandleFunc("GET /v1/users", apiConfig.middlewareAuth(apiConfig.handleGetUser))
+
+	
 
 	s := &http.Server{
 		Addr:    ":" + port,

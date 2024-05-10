@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/vicentefiorito/rss_feed_aggregator/internal/auth"
 	"github.com/vicentefiorito/rss_feed_aggregator/internal/database"
 )
 
@@ -48,19 +47,7 @@ func (cfg *apiConfig) handleUserCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 // gets the user by apikey
-func (cfg *apiConfig) handleGetUser(w http.ResponseWriter, r *http.Request) {
-	// get the api key from the header
-	apiKey, err := auth.GetApiKey(r.Header)
-	if err != nil {
-		jsonError(w, http.StatusUnauthorized, "Couldn't find Api Key")
-		return
-	}
-
-	user, err := cfg.DB.GetUserByApiKey(r.Context(), apiKey)
-	if err != nil {
-		jsonError(w, http.StatusInternalServerError, "Couldn't get user")
-		return
-	}
+func (cfg *apiConfig) handleGetUser(w http.ResponseWriter, r *http.Request, user database.User) {
 
 	// respond with a valid created user
 	jsonResponse(w, http.StatusOK, databaseUserToUser(user))
