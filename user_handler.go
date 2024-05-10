@@ -63,5 +63,5 @@ func (cfg *apiConfig) handleGetUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// respond with a valid created user
-	jsonResponse(w, http.StatusOK, user)
+	jsonResponse(w, http.StatusOK, databaseUserToUser(user))
 }
