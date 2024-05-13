@@ -5,3 +5,6 @@ INSERT INTO feed_follows(
     VALUES($1,$2,$3,$4,$5)
     RETURNING *;
 --
+
+-- name: DeleteFeedFollow :exec
+DELETE FROM feed_follows WHERE id = $1 AND user_id = $2;

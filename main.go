@@ -60,6 +60,7 @@ func main() {
 
 	// feedFollow endpoints
 	mux.HandleFunc("POST /v1/feed_follows", apiConfig.middlewareAuth(apiConfig.handleCreateFeedFollow))
+	mux.HandleFunc("DELETE /v1/feed_follows/{feedFollowID}", apiConfig.middlewareAuth(apiConfig.handleDeleteFeedFollow))
 
 	s := &http.Server{
 		Addr:    ":" + port,

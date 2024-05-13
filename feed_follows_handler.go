@@ -44,3 +44,29 @@ func (cfg *apiConfig) handleCreateFeedFollow(w http.ResponseWriter, r *http.Requ
 	// return a valid json
 	jsonResponse(w, http.StatusCreated, databaseFeedFollowToFeedFollow(feedFollow))
 }
+
+// handles the deletion of a feed_follow for a user
+func (cfg *apiConfig) handleDeleteFeedFollow(w http.ResponseWriter, r *http.Request, user database.User) {
+	// gets the id from the url
+	feedFollowIDString := r.PathValue("feedFollowID")
+	// converts the string into an id
+	feedFollowID, err := uuid.Parse(feedFollowIDString)
+	if err != nil {
+		jsonError(w, http.StatusBadRequest, "Invalid Chirp ID")
+		return
+	}
+
+	// delete the feed follow
+	err = cfg.DB.DeleteFeedFollow(r.Context(), database.DeleteFeedFollowParams{
+		ID:     feedFollowID,
+		UserID: user.ID,
+	})
+
+	if err != nil {
+		jsonError(w, http.StatusInternalServerError, "Couldn't delete feed follow")
+		return
+	}
+
+	// valid json response
+	jsonResponse(w, http.StatusOK, struct{}{})
+}
