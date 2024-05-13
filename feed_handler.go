@@ -10,6 +10,12 @@ import (
 	"github.com/vicentefiorito/rss_feed_aggregator/internal/database"
 )
 
+// this struct holds the creation of a feed and a feed follow
+type response struct {
+	Feed       Feed       `json:"feed"`
+	FeedFollow FeedFollow `json:"feed_follow"`
+}
+
 // this function creates a feed into the db
 func (cfg *apiConfig) handleFeedCreate(w http.ResponseWriter, r *http.Request, user database.User) {
 	// request body
@@ -45,7 +51,24 @@ func (cfg *apiConfig) handleFeedCreate(w http.ResponseWriter, r *http.Request, u
 		return
 	}
 
-	jsonResponse(w, http.StatusCreated, databaseFeedToFeed(feed))
+	//  create the feed follow
+	feedFollow, err := cfg.DB.CreateFeedFollow(r.Context(), database.CreateFeedFollowParams{
+		ID:        uuid.New(),
+		FeedID:    feed.ID,
+		UserID:    user.ID,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+	})
+	if err != nil {
+		jsonError(w, http.StatusInternalServerError, "Couldn't create feed follow")
+		fmt.Println(err)
+		return
+	}
+
+	jsonResponse(w, http.StatusCreated, response{
+		Feed:       databaseFeedToFeed(feed),
+		FeedFollow: databaseFeedFollowToFeedFollow(feedFollow),
+	})
 
 }
 
