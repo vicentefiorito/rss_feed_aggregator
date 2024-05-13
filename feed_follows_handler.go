@@ -45,6 +45,16 @@ func (cfg *apiConfig) handleCreateFeedFollow(w http.ResponseWriter, r *http.Requ
 	jsonResponse(w, http.StatusCreated, databaseFeedFollowToFeedFollow(feedFollow))
 }
 
+// handles the get of all feed follows for a user
+func (cfg *apiConfig) handleGetFeedFollows(w http.ResponseWriter, r *http.Request, user database.User) {
+	feedFollows, err := cfg.DB.GetFeedFollows(r.Context(), user.ID)
+	if err != nil {
+		jsonError(w, http.StatusInternalServerError, "Couldn't get feed follows")
+		return
+	}
+	jsonResponse(w, http.StatusOK, databaseFeedFollowsToFeedFollows(feedFollows))
+}
+
 // handles the deletion of a feed_follow for a user
 func (cfg *apiConfig) handleDeleteFeedFollow(w http.ResponseWriter, r *http.Request, user database.User) {
 	// gets the id from the url

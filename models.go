@@ -69,10 +69,20 @@ func databaseFeedsToFeeds(feeds []database.Feed) []Feed {
 // handler tha converts db feed_follows to a regular one
 func databaseFeedFollowToFeedFollow(feedFollow database.FeedFollow) FeedFollow {
 	return FeedFollow{
-		ID: feedFollow.ID,
+		ID:        feedFollow.ID,
 		CreatedAt: feedFollow.CreatedAt,
 		UpdatedAt: feedFollow.UpdatedAt,
-		UserID: feedFollow.UserID,
-		FeedID: feedFollow.FeedID,
+		UserID:    feedFollow.UserID,
+		FeedID:    feedFollow.FeedID,
 	}
+}
+
+// returns a slice of feed follows for a single user
+func databaseFeedFollowsToFeedFollows(feedFollows []database.FeedFollow) []FeedFollow {
+	res := make([]FeedFollow, len(feedFollows))
+	for i, feedFollow := range feedFollows {
+		res[i] = databaseFeedFollowToFeedFollow(feedFollow)
+	}
+	return res
+
 }
