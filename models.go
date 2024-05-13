@@ -40,11 +40,20 @@ type Feed struct {
 // handler that converts a database Feed to a regular feed
 func databaseFeedToFeed(feed database.Feed) Feed {
 	return Feed{
-		ID: feed.ID,
+		ID:        feed.ID,
 		CreatedAt: feed.CreatedAt,
 		UpdatedAt: feed.UpdatedAt,
-		Name: feed.Name,
-		Url: feed.Url,
-		UserID: feed.UserID,
+		Name:      feed.Name,
+		Url:       feed.Url,
+		UserID:    feed.UserID,
 	}
+}
+
+// handler that converts more than one database feed
+func databaseFeedsToFeeds(feeds []database.Feed) []Feed {
+	res := make([]Feed, len(feeds))
+	for i, feed := range feeds {
+		res[i] = databaseFeedToFeed(feed)
+	}
+	return res
 }

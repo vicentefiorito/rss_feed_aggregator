@@ -48,3 +48,13 @@ func (cfg *apiConfig) handleFeedCreate(w http.ResponseWriter, r *http.Request, u
 	jsonResponse(w, http.StatusCreated, databaseFeedToFeed(feed))
 
 }
+
+// handler that returns all the feeds created
+func (cfg *apiConfig) handleGetFeeds(w http.ResponseWriter, r *http.Request) {
+	feeds, err := cfg.DB.GetFeeds(r.Context())
+	if err != nil {
+		jsonError(w, http.StatusInternalServerError, "Couldn't get feeds")
+		return
+	}
+	jsonResponse(w, http.StatusOK, databaseFeedsToFeeds(feeds))
+}
