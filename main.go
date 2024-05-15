@@ -2,10 +2,10 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -18,12 +18,6 @@ type apiConfig struct {
 }
 
 func main() {
-	feed, err := fetchRssFeed("https://wagslane.dev/index.xml")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println(feed)
 
 	godotenv.Load(".env")
 
@@ -50,6 +44,9 @@ func main() {
 	apiConfig := apiConfig{
 		DB: dbQueries,
 	}
+
+	// calling the scrapper
+	go startScraping(dbQueries, 10, time.Minute)
 
 	// creating a server
 	mux := http.NewServeMux()
